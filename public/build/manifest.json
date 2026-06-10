@@ -1,0 +1,33 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-C2iRuOLx.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-QVT30_bB.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true,
+    "imports": [
+      "resources/js/navbar.js",
+      "resources/js/ratings.js"
+    ]
+  },
+  "resources/js/navbar.js": {
+    "file": "assets/navbar-D3U37R3i.js",
+    "name": "navbar",
+    "src": "resources/js/navbar.js",
+    "isEntry": true
+  },
+  "resources/js/ratings.js": {
+    "file": "assets/ratings-CM9I_ege.js",
+    "name": "ratings",
+    "src": "resources/js/ratings.js",
+    "isEntry": true
+  }
+}
