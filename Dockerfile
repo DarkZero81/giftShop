@@ -26,5 +26,6 @@ RUN composer install --no-dev --optimize-autoloader
 # ضبط الصلاحيات للمجلدات لتجنب أي مشاكل
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# تشغيل أوامر قاعدة البيانات تلقائياً عند بناء السيرفر
-RUN php artisan migrate --force && php artisan db:seed --force
+# إعداد أمر التشغيل النهائي لدمج قاعدة البيانات مع إقلاع السيرفر
+ENTRYPOINT ["sh", "-c", "php artisan migrate --force && php artisan db:seed --force && apache2-foreground"]
+
