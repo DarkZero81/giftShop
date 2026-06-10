@@ -1,9 +1,15 @@
 FROM php:8.4-apache
 
-# تثبيت الإضافات اللازمة لقاعدة البيانات
-RUN docker-php-ext-install pdo pdo_mysql
+# تثبيت الأدوات والإضافات اللازمة لقاعدة البيانات والملفات
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    && docker-php-ext-install pdo pdo_mysql
 
-# تفعيل نظام التوجيه في اباتشي
+# تحميل وتثبيت Composer داخل السيرفر
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# تفعيل نظام التوجيه في أباتشي
 RUN a2enmod rewrite
 
 # ضبط المجلد الرئيسي للمشروع
@@ -14,5 +20,8 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.
 # نسخ ملفات المشروع داخل السيرفر
 COPY . /var/www/html
 
-# ضبط الصلاحيات للمجلدات
+# تشغيل أمر تثبيت حزم الـ Vendor
+RUN composer install --no-dev --optimize-autoloader
+
+# ضبط الصلاحيات للمجلدات لتجنب أي مشاكل
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
