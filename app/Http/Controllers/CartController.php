@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\CartItem;
-use App\Models\Product;
+use App\Models\Product; // استدعاء صحيح بحرف كبير
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -45,7 +45,9 @@ class CartController extends Controller
         ]);
 
         $cart = $this->getCartForRequest($request);
-        $product = product::findOrFail($request->product_id);
+        
+        // تم التعديل هنا: استخدام P الكبيرة
+        $product = Product::findOrFail($request->product_id); 
         $quantity = $request->quantity ?? 1;
 
         $item = CartItem::where('cart_id', $cart->id)->where('product_id', $product->id)->first();
@@ -70,7 +72,9 @@ class CartController extends Controller
         $request->validate(['quantity' => 'required|integer|min:1']);
         $item = CartItem::findOrFail($itemId);
         $item->quantity = $request->quantity;
-        $product = product::findOrFail($item->product_id);
+        
+        // تم التعديل هنا: استخدام P الكبيرة
+        $product = Product::findOrFail($item->product_id); 
         $item->price = $product->price;
         $item->save();
         return redirect()->route('cart.index')->with('success', 'Cart updated');
