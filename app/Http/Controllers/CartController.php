@@ -14,18 +14,18 @@ class CartController extends Controller
     protected function getCartForRequest($request)
     {
         if (Auth::check()) {
-            $cart = cart::firstOrCreate(['user_id' => Auth::id(), 'status' => 'active']);
+            $cart = Cart::firstOrCreate(['user_id' => Auth::id(), 'status' => 'active']);
             session()->put('cart_id', $cart->id);
             return $cart;
         }
 
         $cartId = session('cart_id');
         if ($cartId) {
-            $cart = cart::find($cartId);
+            $cart = Cart::find($cartId);
             if ($cart) return $cart;
         }
 
-        $cart = cart::create(['status' => 'active']);
+        $cart = Cart::create(['status' => 'active']);
         session()->put('cart_id', $cart->id);
         return $cart;
     }
