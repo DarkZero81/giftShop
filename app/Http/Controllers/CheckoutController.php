@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\cart;
-use App\Models\order;
-use App\Models\orderitem;
-use App\Models\coupon;
+use App\Models\Cart;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
