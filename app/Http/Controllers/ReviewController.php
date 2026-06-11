@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\review;
-use App\Models\product;
+use App\Models\Review;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,8 +20,8 @@ class ReviewController extends Controller
             'comment' => 'nullable|string',
         ]);
 
-        $product = product::findOrFail($productId);
-        review::create([
+        $product = Product::findOrFail($productId);
+        Review::create([
             'product_id' => $product->id,
             'user_id' => Auth::id(),
             'rating' => $request->rating,
