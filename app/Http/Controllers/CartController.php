@@ -48,13 +48,13 @@ class CartController extends Controller
         $product = product::findOrFail($request->product_id);
         $quantity = $request->quantity ?? 1;
 
-        $item = cartitem::where('cart_id', $cart->id)->where('product_id', $product->id)->first();
+        $item = CartItem::where('cart_id', $cart->id)->where('product_id', $product->id)->first();
         if ($item) {
             $item->quantity += $quantity;
             $item->price = $product->price;
             $item->save();
         } else {
-            cartitem::create([
+            CartItem::create([
                 'cart_id' => $cart->id,
                 'product_id' => $product->id,
                 'quantity' => $quantity,
@@ -68,7 +68,7 @@ class CartController extends Controller
     public function update(Request $request, $itemId)
     {
         $request->validate(['quantity' => 'required|integer|min:1']);
-        $item = cartitem::findOrFail($itemId);
+        $item = CartItem::findOrFail($itemId);
         $item->quantity = $request->quantity;
         $product = product::findOrFail($item->product_id);
         $item->price = $product->price;
@@ -78,7 +78,7 @@ class CartController extends Controller
 
     public function remove(Request $request, $itemId)
     {
-        $item = cartitem::findOrFail($itemId);
+        $item = CartItem::findOrFail($itemId);
         $item->delete();
         return redirect()->route('cart.index')->with('success', 'Item removed');
     }
