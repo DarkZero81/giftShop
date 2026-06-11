@@ -14,7 +14,7 @@ class CheckoutController extends Controller
     public function checkout(Request $request)
     {
         $cartId = session('cart_id');
-        $cart = $cartId ? cart::with('items.product')->find($cartId) : null;
+        $cart = $cartId ? Cart::with('items.product')->find($cartId) : null;
         return view('checkout.checkout', compact('cart'));
     }
 
@@ -29,10 +29,10 @@ class CheckoutController extends Controller
 
         $cart = null;
         if (Auth::check()) {
-            $cart = cart::where('user_id', Auth::id())->where('status', 'active')->with('items.product')->first();
+            $cart = Cart::where('user_id', Auth::id())->where('status', 'active')->with('items.product')->first();
         } else {
             $cartId = session('cart_id');
-            $cart = $cartId ? cart::with('items.product')->find($cartId) : null;
+            $cart = $cartId ? Cart::with('items.product')->find($cartId) : null;
         }
 
         if (!$cart || $cart->items->isEmpty()) {
@@ -47,7 +47,7 @@ class CheckoutController extends Controller
         // apply coupon for logged in user if exists
         $appliedCoupon = null;
         if (Auth::check()) {
-            $coupon = coupon::where('user_id', Auth::id())->where('is_active', true)->where(function ($q) {
+            $coupon = Coupon::where('user_id', Auth::id())->where('is_active', true)->where(function ($q) {
                 $q->whereNull('expires_at')->orWhere('expires_at', '>', now());
             })->first();
             if ($coupon) {
@@ -58,7 +58,7 @@ class CheckoutController extends Controller
         }
 
         // إنشاء الطلب بحالة 'pending' (معلق)
-        $order = order::create([
+        $order = Order::create([
             'user_id' => Auth::id() ?? null,
             'total' => $total,
             'status' => 'pending', // يبدأ الطلب معلقاً بانتظار الدفع
@@ -70,7 +70,7 @@ class CheckoutController extends Controller
 
         // إضافة عناصر الطلب
         foreach ($cart->items as $item) {
-            orderitem::create([
+            OrderItem::create([
                 'order_id' => $order->id,
                 'product_id' => $item->product_id,
                 'quantity' => $item->quantity,
