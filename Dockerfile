@@ -1,10 +1,12 @@
 FROM php:8.4-apache
 
-# تثبيت الأدوات والإضافات اللازمة لدعم الـ MySQL والـ PostgreSQL معاً
+# 1. تثبيت الأدوات والإضافات اللازمة مع Node.js و NPM لبناء التايلوند
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libpq-dev \
+    nodejs \
+    npm \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql
 
 # تحميل وتثبيت Composer داخل السيرفر
@@ -21,8 +23,12 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.
 # نسخ ملفات المشروع داخل السيرفر
 COPY . /var/www/html
 
-# تشغيل أمر تثبيت حزم الـ Vendor
+# 2. تشغيل أمر تثبيت حزم الـ Vendor (PHP)
 RUN composer install --no-dev --optimize-autoloader
+
+# 3. تثبيت حزم الـ Node وبناء ملفات Tailwind CSS و Vite
+RUN npm install
+RUN npm run build
 
 # ضبط الصلاحيات للمجلدات لتجنب أي مشاكل
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
