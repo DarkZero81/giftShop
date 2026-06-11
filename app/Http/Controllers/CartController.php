@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cart;
+use App\Models\cart;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Http\Request;
