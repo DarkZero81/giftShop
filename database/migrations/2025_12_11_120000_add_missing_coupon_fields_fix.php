@@ -6,18 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up(): void
-    {
-        Schema::table('coupons', function (Blueprint $table) {
-            $table->integer('max_uses')->nullable()->after('is_active');
-            $table->integer('used_count')->default(0)->after('max_uses');
-        });
-    }
+public function up()
+{
+    Schema::table('coupons', function (Blueprint $table) {
+        // التحقق من عدم وجود العمود قبل إنشائه
+        if (!Schema::hasColumn('coupons', 'max_uses')) {
+            $table->integer('max_uses')->nullable();
+        }
+    });
+}
+public function down()
+{
+    Schema::table('coupons', function (Blueprint $table) {
+        if (Schema::hasColumn('coupons', 'max_uses')) {
+            $table->dropColumn('max_uses');
+        }
+    });
+}
 
-    public function down(): void
-    {
-        Schema::table('coupons', function (Blueprint $table) {
-            $table->dropColumn(['used_count', 'max_uses']);
-        });
-    }
 };
