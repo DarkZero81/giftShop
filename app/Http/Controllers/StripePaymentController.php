@@ -20,7 +20,7 @@ class StripePaymentController extends Controller
         $amount = 150.00; // Default amount if no order found
 
         if ($orderId) {
-            $order = \App\Models\order::find($orderId);
+            $order = \App\Models\Order::find($orderId);
             if ($order) {
                 $amount = $order->total;
             }
