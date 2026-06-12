@@ -2,109 +2,79 @@
     @php
         $current = $paginator->currentPage();
         $last = $paginator->lastPage();
-        $window = 2; // pages on either side of current
+        $window = 1; // تقليل عدد الأزرار ليناسب شاشات الجوال تماماً
         $start = max(1, $current - $window);
         $end = min($last, $current + $window);
         $queryParams = request()->except('page');
     @endphp
 
-    <nav role="navigation" aria-label="Pagination Navigation" class="d-flex flex-column align-items-center w-100">
-        <style>
-            /* pill-style pagination */
-            .pagination .page-link {
-                border-radius: 999rem;
-                padding-left: 0.6rem;
-                padding-right: 0.6rem;
-            }
-
-            /* hide page numbers on very small screens to keep layout compact */
-            @media (max-width: 480px) {
-                .pagination .page-number {
-                    display: none;
-                }
-
-                .pagination .page-link.current-visible {
-                    display: inline-block;
-                }
-            }
-        </style>
-
-        <ul class="pagination pagination-sm mb-0">
-            {{-- First --}}
+    <nav role="navigation" aria-label="Pagination Navigation" style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin: 20px 0; font-family: sans-serif;">
+        <ul style="display: flex; items-center; list-style: none; padding: 0; margin: 0; border-radius: 6px; overflow: hidden; border: 1px solid #e5e7eb; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+            
+            {{-- زر البداية --}}
             @if ($current == 1)
-                <li class="page-item disabled"><span class="page-link">« First</span></li>
+                <li><span style="display: flex; align-items: center; justify-content: center; px: 12px; height: 38px; padding: 0 12px; text-decoration: none; color: #9ca3af; bg-color: #f3f4f6; background: #f3f4f6; cursor: not-allowed; border-right: 1px solid #e5e7eb;">«</span></li>
             @else
-                <li class="page-item"><a class="page-link"
-                        href="{{ $paginator->url(1) }}{{ http_build_query($queryParams) ? (strpos($paginator->url(1), '?') === false ? '?' : '&') . http_build_query($queryParams) : '' }}"
-                        rel="first">« First</a></li>
+                <li><a style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 12px; text-decoration: none; color: #4b5563; background: #fff; border-right: 1px solid #e5e7eb;" href="{{ $paginator->url(1) }}{{ http_build_query($queryParams) ? (strpos($paginator->url(1), '?') === false ? '?' : '&') . http_build_query($queryParams) : '' }}">«</a></li>
             @endif
 
-            {{-- Prev --}}
+            {{-- زر السابق --}}
             @if ($paginator->onFirstPage())
-                <li class="page-item disabled"><span class="page-link" aria-hidden="true"><i
-                            class="bi bi-chevron-left"></i></span></li>
+                <li><span style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; color: #9ca3af; background: #f3f4f6; cursor: not-allowed; border-right: 1px solid #e5e7eb; font-weight: bold;">‹</span></li>
             @else
-                <li class="page-item"><a class="page-link" href="{{ $paginator->previousPageUrl() }}" rel="prev"
-                        aria-label="Previous"><i class="bi bi-chevron-left"></i></a></li>
+                <li><a style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; text-decoration: none; color: #4b5563; background: #fff; border-right: 1px solid #e5e7eb; font-weight: bold;" href="{{ $paginator->previousPageUrl() }}">‹</a></li>
             @endif
 
-            {{-- Pages --}}
+            {{-- النقاط الأولى --}}
             @if ($start > 1)
-                <li class="page-item page-number"><a class="page-link" href="{{ $paginator->url(1) }}">1</a></li>
+                <li><a style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 12px; text-decoration: none; color: #4b5563; background: #fff; border-right: 1px solid #e5e7eb;" href="{{ $paginator->url(1) }}">1</a></li>
                 @if ($start > 2)
-                    <li class="page-item disabled page-number"><span class="page-link">…</span></li>
+                    <li><span style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 12px; color: #9ca3af; background: #fff; border-right: 1px solid #e5e7eb;">...</span></li>
                 @endif
             @endif
 
+            {{-- الأرقام المتغيرة --}}
             @for ($page = $start; $page <= $end; $page++)
                 @if ($page == $current)
-                    <li class="page-item active" aria-current="page"><span
-                            class="page-link current-visible">{{ $page }}</span></li>
+                    <li><span style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; color: #fff; background: #6366f1; border-right: 1px solid #6366f1; font-weight: 600;">{{ $page }}</span></li>
                 @else
-                    <li class="page-item page-number"><a class="page-link"
-                            href="{{ $paginator->url($page) }}">{{ $page }}</a></li>
+                    <li><a style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; text-decoration: none; color: #4b5563; background: #fff; border-right: 1px solid #e5e7eb;" href="{{ $paginator->url($page) }}">{{ $page }}</a></li>
                 @endif
             @endfor
 
+            {{-- النقاط الأخيرة --}}
             @if ($end < $last)
                 @if ($end < $last - 1)
-                    <li class="page-item disabled page-number"><span class="page-link">…</span></li>
+                    <li><span style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 12px; color: #9ca3af; background: #fff; border-right: 1px solid #e5e7eb;">...</span></li>
                 @endif
-                <li class="page-item page-number"><a class="page-link"
-                        href="{{ $paginator->url($last) }}">{{ $last }}</a></li>
+                <li><a style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 12px; text-decoration: none; color: #4b5563; background: #fff; border-right: 1px solid #e5e7eb;" href="{{ $paginator->url($last) }}">{{ $last }}</a></li>
             @endif
 
-            {{-- Next --}}
+            {{-- زر التالي --}}
             @if ($paginator->hasMorePages())
-                <li class="page-item"><a class="page-link" href="{{ $paginator->nextPageUrl() }}" rel="next"
-                        aria-label="Next"><i class="bi bi-chevron-right"></i></a></li>
+                <li><a style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; text-decoration: none; color: #4b5563; background: #fff; border-right: 1px solid #e5e7eb; font-weight: bold;" href="{{ $paginator->nextPageUrl() }}">›</a></li>
             @else
-                <li class="page-item disabled"><span class="page-link" aria-hidden="true"><i
-                            class="bi bi-chevron-right"></i></span></li>
+                <li><span style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 14px; color: #9ca3af; background: #f3f4f6; cursor: not-allowed; border-right: 1px solid #e5e7eb; font-weight: bold;">›</span></li>
             @endif
 
-            {{-- Last --}}
+            {{-- زر النهاية --}}
             @if ($current == $last)
-                <li class="page-item disabled"><span class="page-link">Last »</span></li>
+                <li><span style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 12px; color: #9ca3af; background: #f3f4f6; cursor: not-allowed;">»</span></li>
             @else
-                <li class="page-item"><a class="page-link" href="{{ $paginator->url($last) }}">Last »</a></li>
+                <li><a style="display: flex; align-items: center; justify-content: center; height: 38px; padding: 0 12px; text-decoration: none; color: #4b5563; background: #fff;" href="{{ $paginator->url($last) }}">»</a></li>
             @endif
         </ul>
 
-        <div class="d-flex align-items-center gap-3 mt-2">
-            <div class="small text-muted">Page {{ $current }} of {{ $last }} — {{ $paginator->total() }}
-                results</div>
-
-            <!-- Jump to page form -->
-            <form method="GET" class="d-inline-flex align-items-center" style="gap:.5rem;"
-                action="{{ request()->url() }}">
+        {{-- صندوق القفز السريع والبيانات المساعدة --}}
+        <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px; font-size: 12px; color: #f3f4f6;">
+            <span style="color: rgba(255,255,255,0.8)">Page {{ $current }} of {{ $last }}</span>
+            
+            <form method="GET" style="display: inline-flex; align-items: center; gap: 6px;" action="{{ request()->url() }}">
                 @foreach (request()->except('page') as $key => $value)
                     <input type="hidden" name="{{ $key }}" value="{{ $value }}">
                 @endforeach
-                <label for="goto_page" class="visually-hidden">Go to page</label>
-                <input id="goto_page" name="page" type="number" min="1" max="{{ $last }}"
-                    class="form-control form-control-sm" style="width:5.5rem;" placeholder="#" />
-                <button type="submit" class="btn btn-sm btn-outline-primary">Go</button>
+                <input name="page" type="number" min="1" max="{{ $last }}" style="width: 45px; height: 24px; text-align: center; border: 1px solid #e5e7eb; border-radius: 4px; color: #000; font-size: 11px;" placeholder="#" />
+                <button type="submit" style="height: 24px; padding: 0 8px; background: #fff; color: #4f46e5; border: 1px solid #e5e7eb; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: bold;">Go</button>
             </form>
         </div>
     </nav>
