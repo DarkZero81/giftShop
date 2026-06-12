@@ -29,7 +29,7 @@
             </div>
 
             <div class="d-flex justify-content-center">
-                {{ $products->links() }}
+                {{ $products->links('vendor.pagination.custom') }}
             </div>
         </div>
     </div>
